@@ -1,0 +1,42 @@
+buildscript {
+    ext.kotlin_version = '1.7.10'
+    repositories {
+        google()
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    }
+}
+
+allprojects {
+    repositories {
+        google()
+        mavenCentral()
+        
+    }
+}
+
+rootProject.buildDir = '../build'
+subprojects {
+    project.buildDir = "${rootProject.buildDir}/${project.name}"
+}
+subprojects {
+    project.evaluationDependsOn(':app')
+}
+
+tasks.register("clean", Delete) {
+    delete rootProject.buildDir
+}
+
+
+ext {
+    retrofitVersion = "2.9.0"
+    gsonVersion = '2.8.6'
+    eventBusVersion = '3.2.0'
+    //spongyCastleVersion = '1.58.0.0'
+    spongyCastleVersion = '1.51.0.0'
+    guavaVersion = '28.2-android'
+    okhttp_version = "4.10.0" 
+}

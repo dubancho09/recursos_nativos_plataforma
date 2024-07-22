@@ -1,0 +1,127 @@
+plugins {
+    id "com.android.application"
+    id "kotlin-android"
+    id "dev.flutter.flutter-gradle-plugin"
+}
+
+def localProperties = new Properties()
+def localPropertiesFile = rootProject.file('local.properties')
+if (localPropertiesFile.exists()) {
+    localPropertiesFile.withReader('UTF-8') { reader ->
+        localProperties.load(reader)
+    }
+}
+
+def flutterVersionCode = localProperties.getProperty('flutter.versionCode')
+if (flutterVersionCode == null) {
+    flutterVersionCode = '1'
+}
+
+def flutterVersionName = localProperties.getProperty('flutter.versionName')
+if (flutterVersionName == null) {
+    flutterVersionName = '1.0'
+}
+
+ext {
+    retrofitVersion = "2.9.0"
+    gsonVersion = '2.8.6'
+    eventBusVersion = '3.2.0'
+    spongyCastleVersion = '1.51.0.0'
+    guavaVersion = '28.2-android'
+    okhttp_version = "4.10.0" 
+}
+
+android {
+    namespace "com.example.redeban_qr"
+    compileSdkVersion flutter.compileSdkVersion
+    ndkVersion flutter.ndkVersion
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+
+    sourceSets {
+        main.java.srcDirs += 'src/main/kotlin'
+    }
+
+    defaultConfig {
+        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
+        applicationId "com.example.redeban_qr"
+        // You can update the following values to match your application needs.
+        // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
+        minSdkVersion flutter.minSdkVersion
+        targetSdkVersion flutter.targetSdkVersion
+        versionCode flutterVersionCode.toInteger()
+        versionName flutterVersionName
+        multiDexEnabled true
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            shrinkResources false
+            // TODO: Add your own signing config for the release build.
+            // Signing with the debug keys for now, so `flutter run --release` works.
+            signingConfig signingConfigs.debug
+        }
+        debug {
+            minifyEnabled false
+            shrinkResources false
+            // other configurations
+        }
+    }
+
+    repositories {
+        flatDir {
+            dirs 'libs'
+        }
+    }
+}
+
+flutter {
+    source '../..'
+}
+
+dependencies {
+    // required VALID
+    implementation "com.google.code.gson:gson:$rootProject.gsonVersion"
+    implementation "org.greenrobot:eventbus:$rootProject.eventBusVersion"
+    implementation "com.madgag.spongycastle:core:$rootProject.spongyCastleVersion"
+    implementation "com.madgag.spongycastle:prov:$rootProject.spongyCastleVersion"
+    implementation "com.madgag.spongycastle:pkix:$rootProject.spongyCastleVersion"
+    implementation "com.madgag.spongycastle:pg:$rootProject.spongyCastleVersion"
+    implementation "com.google.guava:guava:$rootProject.guavaVersion"
+    implementation 'androidx.multidex:multidex:2.0.0'
+    implementation "com.jakewharton.timber:timber:4.7.1"
+
+    //implementation(name: 'eventbus-3.1.1', ext: 'jar')
+
+    // required by emvqr
+    implementation "com.journeyapps:zxing-android-embedded:3.6.0"
+
+    // Retrofit
+    implementation "com.squareup.retrofit2:retrofit:$retrofitVersion"
+    implementation "com.squareup.retrofit2:converter-scalars:$retrofitVersion"
+    implementation "com.squareup.retrofit2:converter-gson:$retrofitVersion"
+    implementation "com.squareup.okhttp3:logging-interceptor:$okhttp_version"
+    implementation "com.squareup.okhttp3:okhttp:$okhttp_version"
+    implementation "com.squareup.retrofit2:adapter-rxjava2:$retrofitVersion"
+
+    implementation(name: 'volley', ext: 'aar')
+
+    implementation(name: 'SDKqrcode', ext: 'aar')
+    implementation(name: 'communication', ext: 'aar')
+    implementation(name: 'emvqr', ext: 'aar')
+    implementation(name: 'utils', ext: 'aar')
+    implementation(name: 'security', ext: 'aar')
+
+    
+
+    implementation 'androidx.appcompat:appcompat:1.3.1'
+
+}
