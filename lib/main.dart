@@ -37,6 +37,9 @@ class _MainAppState extends State<MainApp> {
   Widget build(BuildContext context) {
     return  MaterialApp(
       home: Scaffold(
+        floatingActionButton: FloatingActionButton(onPressed: () async{
+          final result = await platform.invokeMethod<String>('startScan');
+        }),
         body: Center(
           child: SafeArea(
             child: SingleChildScrollView(
