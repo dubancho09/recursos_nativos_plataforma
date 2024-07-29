@@ -21,14 +21,17 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
+import org.json.JSONObject
 
 class MainActivity: FlutterActivity(), QrManagerCallback, QrLicenseCallback {
 
     private lateinit var manPresenter: QrManagerInterface
     private val CHANNEL = "sample.flutter/readQR"
+    private lateinit var methodChannel: MethodChannel
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
+        methodChannel = MethodChannel(flutterEngine.dartExecutor.binaryMessenger, "sample.flutter/readQR")
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL).setMethodCallHandler{
             call, result ->
 
@@ -100,12 +103,36 @@ class MainActivity: FlutterActivity(), QrManagerCallback, QrLicenseCallback {
     }
 
     override fun onErrorShow(errorType: Int, message: String?) {
-        Log.i(TAG, "Error: " + message)
+        val errorData = mapOf(
+            "errorType" to errorType,
+            "message" to message
+        )
+        methodChannel.invokeMethod("onErrorShow", "Error al escanear QR")
     }
+
 
     override fun onScanResponse(qrData: String, qrEntity: QrEntity, objectEmvqrOrRbm: Any?) {
-        Log.i(TAG, "onScanResponse: " + qrEntity);
+        val qrEntityJson = QrEntityHelper(qrEntity).toJson();
+
+
+        methodChannel.invokeMethod("onScanResponse", qrEntityJson)
     }
 
 
+}
+
+
+data class QrEntityHelper(val qrEntity: QrEntity) {
+    fun toJson(): String {
+        val jsonObject = JSONObject()
+
+
+        jsonObject.put("merchantName", qrEntity.merchantAUnreservedC.channel)
+        jsonObject.put("merchantName", qrEntity.transactionAmount)
+        jsonObject.put("merchantName", qrEntity)
+
+
+        return jsonObject.toString()
+
+    }
 }
