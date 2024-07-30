@@ -1,0 +1,97 @@
+// swift-interface-format-version: 1.0
+// swift-compiler-version: Apple Swift version 5.6.1 (swiftlang-5.6.0.323.66 clang-1316.0.20.12)
+// swift-module-flags: -target armv7-apple-ios9.0 -enable-objc-interop -enable-library-evolution -swift-version 5 -enforce-exclusivity=checked -O -module-name VSSHCommunication
+import Foundation
+import Security
+import Swift
+import VSSHSecurity
+import _Concurrency
+@_hasMissingDesignatedInitializers public class Utils {
+  @objc deinit
+}
+public protocol CommunicationManagerDelegate : AnyObject {
+  func successEvent(_ success: VSSHCommunication.BaseSuccessEvent)
+  func errorEvent(_ error: VSSHCommunication.BaseErrorEvent)
+}
+public typealias SuccessEvent = (VSSHCommunication.BaseSuccessEvent) -> Swift.Void
+public typealias ErrorEvent = (VSSHCommunication.BaseErrorEvent) -> Swift.Void
+public class CommunicationManager {
+  public var sessionId: Swift.String?
+  public var disableSecureRequest: Swift.Bool {
+    get
+    set
+  }
+  weak public var delegate: VSSHCommunication.CommunicationManagerDelegate?
+  public var isResponseEncrypted: Swift.Bool
+  public var enableRequestWithSSLPinning: Swift.Bool {
+    get
+    set
+  }
+  public var isSessionIdInEncryptedData: Swift.Bool
+  public init(baseURL: Swift.String, aesTransform: VSSHSecurity.VsshAesMode? = .CBC)
+  public func setBaseUrl(baseUrl: Swift.String)
+  public func setAdditionalEncryptedData(_ additionalEncryptedData: [Swift.AnyHashable : Any]?)
+  public func doGetCertificate(_ url: Swift.String, publicKey: Swift.String, successful: VSSHCommunication.SuccessEvent? = nil, failed: VSSHCommunication.ErrorEvent? = nil)
+  public func initExchangeKey(_ url: Swift.String, endPoint: Swift.String? = nil, headers: [Swift.String : Swift.String]? = nil, exchangeData: VSSHCommunication.ExchangeRequestData, additionalData: [Swift.AnyHashable : Any]? = nil, successEvent: VSSHCommunication.SuccessEvent? = nil, errorEvent: VSSHCommunication.ErrorEvent? = nil)
+  public func consumeWebService(with method: VSSHCommunication.HttpMethodType, path: Swift.String, headers: [Swift.String : Swift.String]? = nil, params: [Swift.AnyHashable : Any]? = nil, successEvent: VSSHCommunication.SuccessEvent? = nil, errorEvent: VSSHCommunication.ErrorEvent? = nil)
+  public func consumeWebServiceCallback(with method: VSSHCommunication.HttpMethodType, path: Swift.String, headers: [Swift.String : Swift.String]? = nil, params: [Swift.AnyHashable : Any]? = nil, successEvent: @escaping VSSHCommunication.SuccessEvent, errorEvent: @escaping VSSHCommunication.ErrorEvent)
+  public func consumeVsshService(_ method: VSSHCommunication.HttpMethodType, path: Swift.String, headers: [Swift.String : Swift.String]? = nil, params: [Swift.AnyHashable : Any]? = nil, successEvent: VSSHCommunication.SuccessEvent? = nil, errorEvent: VSSHCommunication.ErrorEvent? = nil)
+  public func clearSession()
+  @objc deinit
+}
+extension VSSHCommunication.CommunicationManager : VSSHCommunication.CommunicationManagerDelegate {
+  public func successEvent(_ success: VSSHCommunication.BaseSuccessEvent)
+  public func errorEvent(_ error: VSSHCommunication.BaseErrorEvent)
+}
+public struct BaseErrorEvent {
+  public var httpStatusCode: VSSHCommunication.HttpStatusCode?
+  public var body: [Swift.AnyHashable : Any]?
+  public var errorData: Swift.Error?
+}
+public struct BaseModelResponse : Swift.Codable {
+  public func encode(to encoder: Swift.Encoder) throws
+  public init(from decoder: Swift.Decoder) throws
+}
+public enum HttpMethodType {
+  case get
+  case put
+  case post
+  case delete
+  public static func == (a: VSSHCommunication.HttpMethodType, b: VSSHCommunication.HttpMethodType) -> Swift.Bool
+  public func hash(into hasher: inout Swift.Hasher)
+  public var hashValue: Swift.Int {
+    get
+  }
+}
+public enum HttpStatusCode : Swift.Int, Swift.Codable {
+  case success
+  case created
+  case internalServerError
+  case badRequest
+  case unauthorize
+  case notFound
+  case decryptedError
+  case errorSesion
+  case sessionLost
+  public init?(rawValue: Swift.Int)
+  public typealias RawValue = Swift.Int
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+public struct ExchangeRequestData {
+  public var publicKey: Swift.String
+  public var bankPublicKey: Swift.String?
+  public init(publicKey: Swift.String, bankPublicKey: Swift.String? = nil)
+}
+public struct BaseSuccessEvent {
+  public var httpStatusCode: VSSHCommunication.HttpStatusCode?
+  public var response: [Swift.AnyHashable : Any]
+  public var headers: [Swift.AnyHashable : Any]
+  public init(httpStatus: VSSHCommunication.HttpStatusCode? = .success, response: [Swift.AnyHashable : Any] = [:], headers: [Swift.AnyHashable : Any] = [:])
+}
+extension VSSHCommunication.HttpMethodType : Swift.Equatable {}
+extension VSSHCommunication.HttpMethodType : Swift.Hashable {}
+extension VSSHCommunication.HttpStatusCode : Swift.Equatable {}
+extension VSSHCommunication.HttpStatusCode : Swift.Hashable {}
+extension VSSHCommunication.HttpStatusCode : Swift.RawRepresentable {}

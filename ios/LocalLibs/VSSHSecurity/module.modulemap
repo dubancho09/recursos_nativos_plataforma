@@ -1,0 +1,6 @@
+module VSSHSecurity {
+    header "VSSHSecurity.framework/Headers/vssh-ios-security.h"
+    header "VSSHSecurity.framework/Headers/VsshAesEnums.h"
+    header "VSSHSecurity.framework/Headers/VsshPublicKey.h"
+    header "VSSHSecurity.framework/Headers/VsshPrivateKey.h"
+}

@@ -1,0 +1,4 @@
+framework module VSSHEmvQr {
+  header "VSSHEmvQr-Swift.h"
+  requires objc
+}
