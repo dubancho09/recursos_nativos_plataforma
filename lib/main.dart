@@ -70,7 +70,7 @@ class _MainAppState extends State<MainApp> {
     return  MaterialApp(
       home: Scaffold(
         floatingActionButton: FloatingActionButton(onPressed: () async{
-          final result = await platform.invokeMethod<String>('startScan');
+          await platform.invokeMethod<String>('startScan');
         }),
         body: Center(
           child: SafeArea(

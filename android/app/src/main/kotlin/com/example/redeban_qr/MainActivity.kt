@@ -7,6 +7,7 @@ import android.content.Context
 import android.hardware.Camera
 import android.os.Build
 import android.util.Log
+import co.com.rbm.sdkqrcode.data.DataAmount
 import co.com.rbm.sdkqrcode.data.QrEntity
 import co.com.rbm.sdkqrcode.manager.QrManagerImp
 import co.com.rbm.sdkqrcode.manager.QrManagerInterface
@@ -113,8 +114,6 @@ class MainActivity: FlutterActivity(), QrManagerCallback, QrLicenseCallback {
 
     override fun onScanResponse(qrData: String, qrEntity: QrEntity, objectEmvqrOrRbm: Any?) {
         val qrEntityJson = QrEntityHelper(qrEntity).toJson();
-
-
         methodChannel.invokeMethod("onScanResponse", qrEntityJson)
     }
 
@@ -124,13 +123,15 @@ class MainActivity: FlutterActivity(), QrManagerCallback, QrLicenseCallback {
 
 data class QrEntityHelper(val qrEntity: QrEntity) {
     fun toJson(): String {
+
+
         val jsonObject = JSONObject()
 
 
+        jsonObject.put("purposeOfTransaction", qrEntity.merchantAdditionalDataC.purposeOfTransaction)
         jsonObject.put("merchantName", qrEntity.merchantAUnreservedC.channel)
-        jsonObject.put("merchantName", qrEntity.transactionAmount)
-        jsonObject.put("merchantName", qrEntity)
-
+        jsonObject.put("merchantName", qrEntity.merchantName)
+        //jsonObject.put("merchantName", qrEntity.transactionAmount)
 
         return jsonObject.toString()
 
