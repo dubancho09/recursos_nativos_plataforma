@@ -1,0 +1,11 @@
+framework module RBMQRCodeSDK {
+  umbrella header "RBMQRCodeSDK.h"
+  export *
+
+  module * { export * }
+}
+
+module RBMQRCodeSDK.Swift {
+  header "RBMQRCodeSDK-Swift.h"
+  requires objc
+}

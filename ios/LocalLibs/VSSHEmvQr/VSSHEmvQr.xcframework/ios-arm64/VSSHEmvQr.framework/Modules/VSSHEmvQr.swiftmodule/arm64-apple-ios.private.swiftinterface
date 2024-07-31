@@ -1,0 +1,95 @@
+// swift-interface-format-version: 1.0
+// swift-compiler-version: Apple Swift version 5.9 (swiftlang-5.9.0.128.108 clang-1500.0.40.1)
+// swift-module-flags: -target arm64-apple-ios13.0 -enable-objc-interop -enable-library-evolution -swift-version 5 -enforce-exclusivity=checked -O -module-name VSSHEmvQr
+// swift-module-flags-ignorable: -enable-bare-slash-regex
+import AVFoundation
+import Foundation
+import Swift
+import UIKit
+import VSSHCommunication
+import _Concurrency
+import _StringProcessing
+import _SwiftConcurrencyShims
+@objc public protocol MerchantAccountInformation {
+  @objc var visaMerchantIdentifiers: [Swift.String : Swift.String]? { get }
+  @objc var mastercardMerchantIdentifiers: [Swift.String : Swift.String]? { get }
+  @objc var emvcoMerchantIdentifiers: [Swift.String : Swift.String]? { get }
+  @objc var discoverMerchantIdentifiers: [Swift.String : Swift.String]? { get }
+  @objc var amexMerchantIdentifiers: [Swift.String : Swift.String]? { get }
+  @objc var jcbMerchantIdentifiers: [Swift.String : Swift.String]? { get }
+  @objc var unionPayMerchantIdentifiers: [Swift.String : Swift.String]? { get }
+  @objc var additionalPaymentNetworks: [Swift.String : any VSSHEmvQr.MerchantAccountInformationTemplate]? { get }
+}
+extension Swift.KeyedEncodingContainer {
+  public mutating func encode(_ value: [Swift.String : Any], forKey key: Swift.KeyedEncodingContainer<K>.Key) throws
+  public mutating func encode(_ value: [Any], forKey key: Swift.KeyedEncodingContainer<K>.Key) throws
+  public mutating func encodeIfPresent(_ value: [Swift.String : Any]?, forKey key: Swift.KeyedEncodingContainer<K>.Key) throws
+  public mutating func encodeIfPresent(_ value: [Any]?, forKey key: Swift.KeyedEncodingContainer<K>.Key) throws
+}
+@objc public protocol EmvQrManagerCallback {
+  @objc func initiatedScanEmvqr()
+  @objc func onScanResponse(qrData: Swift.String)
+  @objc func onErrorEmvqr(errorType: Swift.Int, errorMessage: Swift.String)
+}
+@objc public protocol MerchantInformationLanguage {
+  @objc var languagePreference: Swift.String? { get }
+  @objc var merchantNameAlternateLanguage: Swift.String? { get }
+  @objc var merchantCityAlternateLanguage: Swift.String? { get }
+}
+@objc public class EmvQrManager : ObjectiveC.NSObject {
+  @objc public init(urlBase: Swift.String, publicKey: Swift.String, license: Swift.String, callback: any VSSHEmvQr.EmvQrManagerCallback)
+  @objc public func startScan(viewController: UIKit.UIViewController, cameraId: AVFoundation.AVCaptureDevice.Position, callback: any VSSHEmvQr.EmvQrManagerCallback)
+  @objc public func processEmvqrData(qrData: Swift.String, callback: any VSSHEmvQr.EmvQrManagerCallback) -> (any VSSHEmvQr.MerchantEmvQrEntity)?
+  @objc deinit
+}
+@objc public protocol MerchantUnreservedTemplate {
+  @objc var globallyUniqueIdentifier: Swift.String? { get }
+  @objc var contextSpecificData: [Swift.String : Swift.String]? { get }
+}
+@objc public protocol PaymentSystemSpecificTemplate {
+  @objc var globallyUniqueIdentifier: Swift.String? { get }
+  @objc var paymentSystemSpecific: [Swift.String : Swift.String]? { get }
+}
+extension Swift.KeyedDecodingContainer {
+  public func decode(_ type: [Any].Type, forKey key: Swift.KeyedDecodingContainer<K>.Key) throws -> [Any]
+  public func decode(_ type: [Swift.String : Any].Type, forKey key: Swift.KeyedDecodingContainer<K>.Key) throws -> [Swift.String : Any]
+  public func decodeIfPresent(_ type: [Any].Type, forKey key: Swift.KeyedDecodingContainer<K>.Key) throws -> [Any]?
+  public func decodeIfPresent(_ type: [Swift.String : Any].Type, forKey key: Swift.KeyedDecodingContainer<K>.Key) throws -> [Swift.String : Any]?
+}
+@objc public protocol MerchantAdditionalData {
+  @objc var billNumber: Swift.String? { get }
+  @objc var mobileNumber: Swift.String? { get }
+  @objc var storeLabel: Swift.String? { get }
+  @objc var loyaltyNumber: Swift.String? { get }
+  @objc var referenceLabel: Swift.String? { get }
+  @objc var customerLabel: Swift.String? { get }
+  @objc var terminalLabel: Swift.String? { get }
+  @objc var purposeOfTransaction: Swift.String? { get }
+  @objc var additionalConsumerDataRequest: Swift.String? { get }
+  @objc var rfuForEmvCo: [Swift.String : Swift.String]? { get }
+  @objc var paymentSystemSpecificTemplates: [Swift.String : any VSSHEmvQr.PaymentSystemSpecificTemplate]? { get }
+}
+@objc public protocol MerchantAccountInformationTemplate {
+  @objc var globallyUniqueIdentifier: Swift.String? { get }
+  @objc var paymentNetworkSpecific: [Swift.String : Swift.String]? { get }
+}
+@objc public protocol MerchantEmvQrEntity {
+  @objc var payloadFormatIndicator: Swift.String? { get }
+  @objc var pointOfInitiationMethod: Swift.String? { get }
+  @objc var merchantAccountInformation: any VSSHEmvQr.MerchantAccountInformation { get }
+  @objc var merchantCategoryCode: Swift.String? { get }
+  @objc var transactionCurrency: Swift.String? { get }
+  @objc var transactionAmout: Swift.String? { get }
+  @objc var tipOrConvenienceIndicator: Swift.String? { get }
+  @objc var valueOfConvenienceFeeFixed: Swift.String? { get }
+  @objc var valueOfConvenienceFeePercentage: Swift.String? { get }
+  @objc var countryCode: Swift.String? { get }
+  @objc var merchantName: Swift.String? { get }
+  @objc var merchantCity: Swift.String? { get }
+  @objc var postalCode: Swift.String? { get }
+  @objc var merchantAdditionalData: (any VSSHEmvQr.MerchantAdditionalData)? { get }
+  @objc var merchantInformationLanguageTemplate: (any VSSHEmvQr.MerchantInformationLanguage)? { get }
+  @objc var rfuForEmvCo: [Swift.String : Swift.String]? { get }
+  @objc var merchantUnreservedTemplates: [Swift.String : any VSSHEmvQr.MerchantUnreservedTemplate]? { get }
+  @objc var crc: Swift.String? { get }
+}

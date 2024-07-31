@@ -1,0 +1,4 @@
+framework module VSSHCommunication {
+  header "VSSHCommunication-Swift.h"
+  requires objc
+}

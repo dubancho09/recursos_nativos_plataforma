@@ -1,0 +1,16 @@
+PODS:
+  - DynamicCodable (1.0)
+
+DEPENDENCIES:
+  - DynamicCodable (= 1.0)
+
+SPEC REPOS:
+  trunk:
+    - DynamicCodable
+
+SPEC CHECKSUMS:
+  DynamicCodable: 2cf558d057b3e6540552943254e1c9eeb706dde2
+
+PODFILE CHECKSUM: 7021fc585ddc40da7e923b452852606e45417927
+
+COCOAPODS: 1.15.2

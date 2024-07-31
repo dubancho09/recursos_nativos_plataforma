@@ -1,0 +1,109 @@
+// swift-interface-format-version: 1.0
+// swift-compiler-version: Apple Swift version 5.10 (swiftlang-5.10.0.13 clang-1500.3.9.4)
+// swift-module-flags: -target x86_64-apple-ios13.0-simulator -enable-objc-interop -enable-library-evolution -swift-version 5 -enforce-exclusivity=checked -O -enable-bare-slash-regex -module-name RBMQRCodeSDK
+import AVFoundation
+import Foundation
+@_exported import RBMQRCodeSDK
+import Swift
+import UIKit
+import VSSHEmvQr
+import _Concurrency
+import _StringProcessing
+import _SwiftConcurrencyShims
+@objc public protocol QrErrorCallback : ObjectiveC.NSObjectProtocol {
+  @objc func onErrorShow(_ errorType: Swift.Int, message: Swift.String)
+}
+@objc public protocol QrLicenseCallback : RBMQRCodeSDK.QrErrorCallback {
+  @objc func checkInitializeScan(_ start: Swift.Bool)
+}
+@objc public protocol QrManagerCallback : RBMQRCodeSDK.QrErrorCallback {
+  @objc func onScanResponse(_ qrData: Swift.String, qrEntity: any RBMQRCodeSDK.QrEntity, qrBaseData: Any)
+}
+@objc public protocol QrManager : ObjectiveC.NSObjectProtocol {
+  @objc func initializeLibrary(_ urlBase: Swift.String, publicKey: Swift.String, license: Swift.String, callbackLicense: any RBMQRCodeSDK.QrLicenseCallback)
+  @objc func startScan(_ cameraId: AVFoundation.AVCaptureDevice.Position, viewController: UIKit.UIViewController, callbackResult: any RBMQRCodeSDK.QrManagerCallback)
+  @objc func transformData(_ qrData: Swift.String, callbackResult: any RBMQRCodeSDK.QrManagerCallback)
+  @objc func calculateTaxStactic(_ entity: any RBMQRCodeSDK.QrEntity, ivaPercentage: Swift.String, incPercentage: Swift.String, transactionAmount: Swift.String, tip: Swift.String) throws -> any RBMQRCodeSDK.DataAmount
+  @objc func calculateTaxHybrid(_ entity: any RBMQRCodeSDK.QrEntity, tip: Swift.String) throws -> any RBMQRCodeSDK.DataAmount
+  @objc func calculateTaxDinamic(_ entity: any RBMQRCodeSDK.QrEntity, tip: Swift.String) throws -> any RBMQRCodeSDK.DataAmount
+}
+@objc @_inheritsConvenienceInitializers public class QrManagerImp : ObjectiveC.NSObject {
+  @objc override dynamic public init()
+  @objc deinit
+}
+extension RBMQRCodeSDK.QrManagerImp : RBMQRCodeSDK.QrManager {
+  @objc dynamic public func initializeLibrary(_ urlBase: Swift.String, publicKey: Swift.String, license: Swift.String, callbackLicense: any RBMQRCodeSDK.QrLicenseCallback)
+  @objc dynamic public func calculateTaxStactic(_ entity: any RBMQRCodeSDK.QrEntity, ivaPercentage: Swift.String, incPercentage: Swift.String, transactionAmount: Swift.String, tip: Swift.String) throws -> any RBMQRCodeSDK.DataAmount
+  @objc dynamic public func calculateTaxHybrid(_ entity: any RBMQRCodeSDK.QrEntity, tip: Swift.String) throws -> any RBMQRCodeSDK.DataAmount
+  @objc dynamic public func calculateTaxDinamic(_ entity: any RBMQRCodeSDK.QrEntity, tip: Swift.String) throws -> any RBMQRCodeSDK.DataAmount
+  @objc dynamic public func startScan(_ cameraId: AVFoundation.AVCaptureDevice.Position, viewController: UIKit.UIViewController, callbackResult: any RBMQRCodeSDK.QrManagerCallback)
+  @objc dynamic public func transformData(_ qrData: Swift.String, callbackResult: any RBMQRCodeSDK.QrManagerCallback)
+}
+@objc public protocol QrEntity : ObjectiveC.NSObjectProtocol {
+  @objc var payloadFormatIndicator: Swift.String? { get }
+  @objc var pointOfInitiationMethod: Swift.String? { get }
+  @objc var crc: Swift.String? { get }
+  @objc var merchantAccountInformation: (any RBMQRCodeSDK.MerchantAccountInformationC)? { get }
+  @objc var merchantCategoryCode: Swift.String? { get }
+  @objc var countryCode: Swift.String? { get }
+  @objc var merchantName: Swift.String? { get }
+  @objc var merchantCity: Swift.String? { get }
+  @objc var postalCode: Swift.String? { get }
+  @objc var merchantUnreservedTemplamples: (any RBMQRCodeSDK.MerchantUnreservedTemplatesC)? { get }
+  @objc var merchantInformationLanguageTemplate: (any RBMQRCodeSDK.MerchantInformationLanguageC)? { get }
+  @objc var merchantAdditionalData: (any RBMQRCodeSDK.MerchantAdditionalDataC)? { get }
+  @objc var transactionAmount: Swift.String? { get }
+  @objc var transactionCurrency: Swift.String? { get }
+  @objc var tipOrConvenienceIndicator: Swift.String? { get }
+  @objc var valueOfConvenienceFeeFixed: Swift.String? { get }
+  @objc var valueOfConvenienceFeePercentage: Swift.String? { get }
+  @objc var address: Swift.String? { get }
+  @objc var totalAmount: Swift.String? { get }
+  @objc var maxIVAPercentage: Swift.String? { get }
+  @objc var maxINCPercentage: Swift.String? { get }
+  @objc var rrn: Swift.String? { get }
+  @objc var approvalNumber: Swift.String? { get }
+}
+@objc public protocol MerchantUnreservedTemplatesC : ObjectiveC.NSObjectProtocol {
+  @objc var channel: Swift.String? { get }
+  @objc var conditionIVA: Swift.String? { get }
+  @objc var valueIVA: Swift.String? { get }
+  @objc var baseIVA: Swift.String? { get }
+  @objc var conditionINC: Swift.String? { get }
+  @objc var valueINC: Swift.String? { get }
+  @objc var conditionTaxOne: Swift.String? { get }
+  @objc var taxOne: Swift.String? { get }
+  @objc var conditionTaxTwo: Swift.String? { get }
+  @objc var taxTwo: Swift.String? { get }
+  @objc var consecutiveTransaction: Swift.String? { get }
+  @objc var securityField: Swift.String? { get }
+}
+@objc public protocol MerchantInformationLanguageC : ObjectiveC.NSObjectProtocol {
+  @objc var languagePreference: Swift.String? { get }
+  @objc var merchantNameAlternateLanguage: Swift.String? { get }
+  @objc var merchantCityAlternateLanguage: Swift.String? { get }
+}
+@objc public protocol MerchantAdditionalDataC : ObjectiveC.NSObjectProtocol {
+  @objc var billNumber: Swift.String? { get }
+  @objc var mobileNumber: Swift.String? { get }
+  @objc var storeLabel: Swift.String? { get }
+  @objc var loyaltyNumber: Swift.String? { get }
+  @objc var referenceLabel: Swift.String? { get }
+  @objc var customerLabel: Swift.String? { get }
+  @objc var terminalLabel: Swift.String? { get }
+  @objc var purposeOfTransaction: Swift.String? { get }
+  @objc var additionalConsumerDataRequest: Swift.String? { get }
+}
+@objc public protocol MerchantAccountInformationC : ObjectiveC.NSObjectProtocol {
+  @objc var idAcquirer: Swift.String? { get }
+  @objc var uniqueCodeMerchant: Swift.String? { get }
+  @objc var uniqueCodeMerchantAggre: Swift.String? { get }
+}
+@objc public protocol DataAmount : ObjectiveC.NSObjectProtocol {
+  @objc var iva: Foundation.NSNumber? { get }
+  @objc var inc: Foundation.NSNumber? { get }
+  @objc var transactionAmount: Foundation.NSNumber? { get }
+  @objc var baseAmount: Foundation.NSNumber? { get }
+  @objc var totalAmount: Foundation.NSNumber? { get }
+  @objc var tip: Foundation.NSNumber? { get }
+}
