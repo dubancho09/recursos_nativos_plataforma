@@ -95,7 +95,8 @@ class _MainAppState extends State<MainApp> {
 
                         if(filePath != ''){
                         final String? resultado = await BarcodeFinder.scanFile(path: filePath);
-                        print('resultado scan: $resultado');
+                        await platform
+                          .invokeMethod<bool>('transformData', {'qrData': resultado});
                       }
 
                         file.deleteSync();
