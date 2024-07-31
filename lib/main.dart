@@ -1,6 +1,11 @@
+import 'dart:io';
+
+import 'package:barcode_finder/barcode_finder.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+
 
 void main() {
   runApp(const MainApp());
@@ -76,8 +81,34 @@ class _MainAppState extends State<MainApp> {
                 child: isInitialized ? Column(
                   children: [
                     FilledButton(onPressed: readQrWithCamera, child: const Text('Leer con la cámara')),
-                    FilledButton(onPressed: (){
+                    FilledButton(onPressed: () async{
+
+                      String filePath = '';
+                      File file;
+                      FilePickerResult? result = await FilePicker.platform.pickFiles(
+                        type: FileType.image
+                      );
+
+                      if (result != null) {
+                        file = File(result.files.single.path!);
+                        filePath = file.path;
+
+                        if(filePath != ''){
+                        final String? resultado = await BarcodeFinder.scanFile(path: filePath);
+                        print('resultado scan: $resultado');
+                      }
+
+                        file.deleteSync();
+                      } else {
+                        // User canceled the picker
+                      }
+
                       
+                      
+
+                      
+                      
+
                     }, child: const Text('Leer desde una imagen')),
                     const SizedBox(height: 30,),
                     Text(dataQr1),

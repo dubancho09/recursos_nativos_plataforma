@@ -12,6 +12,7 @@ dependencies:
   barcode_finder: ^0.0.5
   #image_picker: ^1.0.8
   flutter_barcode_scanner: ^2.0.0
+  file_picker: ^8.0.0+1
 
 dev_dependencies:
   flutter_test:
