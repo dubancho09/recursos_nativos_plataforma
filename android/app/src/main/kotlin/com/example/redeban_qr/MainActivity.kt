@@ -44,13 +44,16 @@ class MainActivity: FlutterActivity(), QrManagerCallback, QrLicenseCallback {
             } else if (call.method == "startScan"){
                 startScan()
                 result.success(null)
+            } else if (call.method == "transformData") {
+                val qrData1 = call.argument<String>("qrData")
+                transformData(qrData1)
             }
 
         }
     }
 
-    private suspend fun initializeLibrary(): String {
-        val resultDeferred = CompletableDeferred<String>()
+    private suspend fun initializeLibrary(): Boolean {
+        val resultDeferred = CompletableDeferred<Boolean>()
         manPresenter = QrManagerImp(this@MainActivity)
         manPresenter.initializeLibrary(
             "https://lab-vssh2.validsolutions.com.br/api-gateway/",
@@ -58,14 +61,14 @@ class MainActivity: FlutterActivity(), QrManagerCallback, QrLicenseCallback {
             "db2f6bzzb853a42255179a2a61bc26dac9c9b5ba599556e8710aa8d01f579433b278fc9de33396ffac3f45820f06229895f2febce013fe1d28955384d8ccac82eab7a6cdd08500f057032ee1fe84411bd845395ddb12e41feec5a52d2af7c657ab93561a9c9f1df2321b176a0e18e710e27305b994b188bc4d32c27aba4a95ba2ade1043",
             object : QrLicenseCallback {
                 override fun onErrorShow(errorCode: Int, errorMessage: String?) {
-                    resultDeferred.complete("Error al iniciar SDK: $errorMessage")
+                    resultDeferred.complete(false)
                 }
 
                 override fun checkInitializeScan(isInitialized: Boolean) {
                     if (isInitialized) {
-                        resultDeferred.complete("El SDK se inició correctamente")
+                        resultDeferred.complete(true)
                     } else {
-                        resultDeferred.complete("Error al iniciar SDK")
+                        resultDeferred.complete(false)
                     }
                 }
             })
@@ -100,7 +103,14 @@ class MainActivity: FlutterActivity(), QrManagerCallback, QrLicenseCallback {
 
 
     override fun checkInitializeScan(start: Boolean) {
-        // Inicialización exitosa
+        methodChannel.invokeMethod("checkInitializeScan", start)
+    }
+
+    fun transformData(qrData: String?){
+        if(qrData == null) {
+            return
+        }
+        manPresenter.transformData(qrData, this)
     }
 
     override fun onErrorShow(errorType: Int, message: String?) {

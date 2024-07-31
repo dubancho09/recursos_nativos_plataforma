@@ -9,6 +9,9 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  barcode_finder: ^0.0.5
+  #image_picker: ^1.0.8
+  flutter_barcode_scanner: ^2.0.0
 
 dev_dependencies:
   flutter_test:

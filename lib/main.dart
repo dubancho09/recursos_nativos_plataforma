@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 
 void main() {
   runApp(const MainApp());
@@ -16,28 +17,30 @@ class _MainAppState extends State<MainApp> {
 
 
   static const platform = MethodChannel('sample.flutter/readQR');
-  String _resultCall = 'SDK init';
   String dataQr1 = '';
   String errorQR = 'Si errores';
+  String dataEncrypted = '';
+  bool isInitialized = false;
 
   @override
   void initState() {
     super.initState();
+    initializeLibrary();
     platform.setMethodCallHandler(_handleMethodCall);
   }
 
   Future<void> initializeLibrary() async{
-    String resultCall;
+    bool resultCall;
 
     try {
-      final result = await platform.invokeMethod<String>('initializeLibrary');
-      resultCall = 'la plataforma respondió: $result';
+      resultCall = await platform.invokeMethod<bool>('initializeLibrary') ?? false;
+      
     } catch (e) {
-      resultCall = "La plataforma respondió el siguiente error: $e";
+      resultCall = false;
     }
 
     setState(() {
-      _resultCall = resultCall;
+      isInitialized = resultCall;
     });
   }
 
@@ -45,21 +48,17 @@ class _MainAppState extends State<MainApp> {
     switch (call.method) {
       case 'onScanResponse':
         String qrData = call.arguments;
-        print("QR Data: $qrData");
         setState(() {
           dataQr1 = qrData;
         });
         break;
       case 'onErrorShow':
         String errorData = call.arguments;
-        // int errorType = errorData['errorType'];
-        // String? message = errorData['message'];
-
-        
         setState(() {
           errorQR = errorData;
         });
         break;
+
       default:
         throw MissingPluginException();
     }
@@ -68,29 +67,44 @@ class _MainAppState extends State<MainApp> {
   @override
   Widget build(BuildContext context) {
     return  MaterialApp(
+      debugShowCheckedModeBanner: false,
       home: Scaffold(
-        floatingActionButton: FloatingActionButton(onPressed: () async{
-          await platform.invokeMethod<String>('startScan');
-        }),
         body: Center(
           child: SafeArea(
             child: SingleChildScrollView(
               child: Center(
-                child: Column(
+                child: isInitialized ? Column(
                   children: [
-                    ElevatedButton(onPressed: initializeLibrary, child: const Text('Iniciar SDK')),
-                    Text(_resultCall),
+                    FilledButton(onPressed: readQrWithCamera, child: const Text('Leer con la cámara')),
+                    FilledButton(onPressed: (){
+                      
+                    }, child: const Text('Leer desde una imagen')),
                     const SizedBox(height: 30,),
                     Text(dataQr1),
-                    const SizedBox(height: 10,),
-                    Text(errorQR)
                   ],
-                ),
+                ) 
+                :
+                  const CircularProgressIndicator(),
               ),
             )
           )
         ),
       ),
     );
+  }
+
+  void readQrWithCamera() async {
+    final data = await FlutterBarcodeScanner.scanBarcode(
+        '#ff6666', 'Cancelar', true, ScanMode.BARCODE);
+    setState(() {
+      if (data != "-1") {
+        dataEncrypted = data;
+      } else {
+        return;
+      }
+    });
+
+    await platform
+        .invokeMethod<bool>('transformData', {'qrData': dataEncrypted});
   }
 }
